@@ -155,6 +155,7 @@ export default function ValentineApp() {
   const [noCount, setNoCount] = useState<number>(0);
   const [yesClicked, setYesClicked] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("Will you be my Valentine?");
+  const [currentGif, setCurrentGif] = useState<string>("");
   const [showSad, setShowSad] = useState<boolean>(false);
 
   // NO button live escape offset
@@ -173,14 +174,38 @@ export default function ValentineApp() {
   const hearts = useMemo(() => generateHearts(32), []);
   const sadParticles = useMemo(() => generateSadParticles(24), []);
 
-  // ── messages ──
-  const cuteNoMessages: string[] = [
-    "Really no? 🥺",
-    "That hurt a little… 😔",
-    "My heart is cracking 💔",
-    "Okay but… concerts?? 🎶",
-    "Food dates tho? 🍕🍰",
-    "World tour together?? ✈️🌍",
+  // ── messages with GIFs ──
+  const cuteNoMessages: Array<{ text: string; gif: string }> = [
+    {
+      text: "Really no? 🥺",
+      gif:
+        "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWw4dGZxaGJ3YjJwaXMwbnR4eW5rZnpqYzBmNXRqZHZhbTZvY2JhayZlcD12MV9naWZzX3NlYXJjaCZjdD1n/L95W4wv8nnb9K/giphy.gif",
+    },
+    {
+      text: "That hurt a little… 😔",
+      gif:
+        "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXJ5dWt6bWFkMzh6ZWg4YmRkMzNvdHJsY3B4dHQxcXM0dHl6YWJodyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/OPU6wzx8JrHna/giphy.gif",
+    },
+    {
+      text: "My heart is cracking 💔",
+      gif:
+        "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3ZvYzBxZTljOXBxYmNwM3F6N3RpMWx6Zm1zZGtvNWppbGh5bmEzZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/d2lcHJTG5Tscg/giphy.gif",
+    },
+    {
+      text: "Okay but… concerts?? 🎶",
+      gif:
+        "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnFwbGg5eWxsYW9zcXUxbGV3MXNkbTVtcHZ4eGZ1b3R4YzlpZ2s0ZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l0MYt5jPR6QX5pnqM/giphy.gif",
+    },
+    {
+      text: "Food dates tho? 🍕🍰",
+      gif:
+        "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdDRjem5sOGtmOHJ3MnJjYjdtdnRveWQ2azVnYjJ4MzBncjZ6Y2VkayZlcD12MV9naWZzX3NlYXJjaCZjdD1n/JER2en0ZRiGUE/giphy.gif",
+    },
+    {
+      text: "World tour together?? ✈️🌍",
+      gif:
+        "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNnZoZzJzNm80MG9kYzlsOW1pYmVsZ2c5MnNjYmVtdGV6eGpxbTNxcCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/26FmQ6EOvLxp6cWyY/giphy.gif",
+    },
   ];
 
   // ── NO button: escape vector away from mouse ──────────────────────────────
@@ -214,12 +239,16 @@ export default function ValentineApp() {
     setNoCount(next);
 
     if (next > cuteNoMessages.length) {
-      setMessage("Okay… I'll stop asking now 🥺💔");
+      setMessage("Okay... Byee 🥺💔");
+      setCurrentGif(
+        "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3c2NnbGk4NzBzN2NxOXY1eTlvODhtNzEwbWI2YTRlb2NteGRsaWo3MCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3BsPYXHcDZ2QMfakLq/giphy.gif",
+      );
       setShowSad(false);
       return;
     }
 
-    setMessage(cuteNoMessages[next - 1]);
+    setMessage(cuteNoMessages[next - 1].text);
+    setCurrentGif(cuteNoMessages[next - 1].gif);
     setShowSad(true);
     setTimeout(() => setShowSad(false), 4500);
   };
@@ -229,7 +258,6 @@ export default function ValentineApp() {
     audioRef.current?.play(); // ← plays /love.mp3
   };
 
-  // ═══════════════════════════ RENDER ══════════════════════════════════════
   return (
     <div
       className="min-h-screen relative flex items-center justify-center overflow-hidden"
@@ -394,15 +422,15 @@ export default function ValentineApp() {
         style={{
           zIndex: 20,
           width: "92%",
-          maxWidth: "700px", // ← wide card
-          background: "rgba(255,255,255,0.9)",
-          backdropFilter: "blur(28px)",
-          WebkitBackdropFilter: "blur(28px)",
-          border: "1px solid rgba(255,255,255,0.55)",
+          maxWidth: "600px",
+          background: "rgba(255, 255, 255, 0.15)", // ← More transparent (was 0.5)
+          backdropFilter: "blur(20px)", // ← Reduced blur (was 28px)
+          WebkitBackdropFilter: "blur(20px)",
+          border: "1px solid rgba(255,255,255,0.25)", // ← More subtle border (was 0.55)
           borderRadius: "40px",
-          padding: "60px 56px 64px", // ← generous padding
+          padding: "60px 56px 64px",
           boxShadow:
-            "0 30px 80px rgba(236,64,122,0.3), 0 4px 24px rgba(0,0,0,0.14)",
+            "0 30px 80px rgba(236,64,122,0.2), 0 4px 24px rgba(0,0,0,0.1)", // ← Softer shadow
         }}
       >
         <AnimatePresence mode="wait">
@@ -414,18 +442,36 @@ export default function ValentineApp() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              {/* pulsing heart icon */}
-              <motion.div
-                className="text-6xl mb-3"
-                animate={{ scale: [1, 1.3, 1] }}
-                transition={{
-                  duration: 1.3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                💝
-              </motion.div>
+              {/* pulsing heart icon OR sad gif */}
+              {noCount === 0 ? (
+                <motion.div
+                  className="text-6xl mb-3"
+                  animate={{ scale: [1, 1.3, 1] }}
+                  transition={{
+                    duration: 1.3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  💝
+                </motion.div>
+              ) : (
+                <motion.div
+                  className="mb-4"
+                  initial={{ scale: 0.6, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+                >
+                  <center>
+                    <img
+                      width="150"
+                      src={currentGif}
+                      alt="reaction"
+                      style={{ borderRadius: "12px" }}
+                    />
+                  </center>
+                </motion.div>
+              )}
 
               {/* question / dynamic message */}
               <motion.h1
